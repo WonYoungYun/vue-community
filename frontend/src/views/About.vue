@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>여긴 테이블로 공지사항 띄우기</h1>
   </div>
 </template>

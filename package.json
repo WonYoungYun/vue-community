@@ -1,0 +1,13 @@
+{
+  "name": "vue-community",
+  "version": "1.0.0",
+  "description": "make vue-community",
+  "main": "index.js",
+  "scripts": {
+    "dev": "set NODE_ENV=development & nodemon ./backend/bin/www",
+    "serve": "cd frontend && yarn serve",
+    "pr": "cd fe && yarn && yarn build && cd ../be && yarn && NODE_ENV=production PORT=80 node ./bin/www"
+  },
+  "author": "",
+  "license": "ISC"
+}

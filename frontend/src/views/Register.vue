@@ -53,6 +53,7 @@
               @verify="onVerify"
               @expired="onExpired"
             ></vue-recaptcha>
+            <v-alert :value="isRecaptchaAlert" type="error">Please Check Recaptcha</v-alert>
           </v-card-text>
 
           <v-card-actions>
@@ -97,7 +98,8 @@ export default {
         // custom attributes
       },
       custom: {}
-    }
+    },
+    isRecaptchaAlert: false
     // invisible: ""
   }),
 
@@ -114,10 +116,9 @@ export default {
     },
     checkRobot() {
       if (this.form.response) this.submit();
-      else this.$refs.recaptcha.execute();
+      else this.isRecaptchaAlert = true;
     },
     submit() {
-      this.$refs.recaptcha.reset();
       this.$validator
         .validateAll()
         .then(r => {
@@ -130,7 +131,7 @@ export default {
         })
         .then(r => {
           if (!r.data.success) throw this.pop("서버에러", "warning");
-
+          this.$refs.recaptcha.reset();
           this.$store.commit("pop", {
             msg: "가입 완료 되었습니다",
             color: "success"

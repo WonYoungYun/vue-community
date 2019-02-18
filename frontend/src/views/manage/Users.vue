@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
     <v-card>
-      <v-card-title class="title font-weight-bold">유저 현황
+      <v-card-title class="headline font-weight-bold">사용자
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -11,6 +11,9 @@
           hide-details
         ></v-text-field>
       </v-card-title>
+      <div>
+        <v-progress-linear v-if="isLoading" slot="progress" color="blue" indeterminate></v-progress-linear>
+      </div>
       <v-data-table :headers="headers" :items="users" :search="search">
         <template slot="items" slot-scope="props">
           <td class="text-xs-center">{{ props.item.id }}</td>
@@ -20,15 +23,20 @@
           <td class="text-xs-center">{{ props.item.blocked }}</td>
           <td class="text-xs-center">
             <v-btn color="info" @click="putDialog(props.item)">수정</v-btn>
-            <v-btn color="error" @click="checkDelUser(props.item._id)">삭제</v-btn>
+            <v-btn
+              v-if="checkSelf(props.item.id)"
+              color="error"
+              @click="checkDelUser(props.item._id)"
+            >삭제</v-btn>
           </td>
         </template>
+
         <v-alert
           slot="no-results"
           :value="true"
           color="error"
           icon="warning"
-        >Your search for "{{ search }}" found no results.</v-alert>
+        >"{{ search }}" 의 검색결과가 없습니다.</v-alert>
       </v-data-table>
       <v-dialog v-model="dialog" persistent max-width="500px">
         <v-card>
@@ -75,10 +83,6 @@
 
 <script>
 export default {
-  mounted() {
-    this.$store.commit("loading");
-    this.getUsers();
-  },
   data() {
     return {
       search: "",
@@ -86,7 +90,6 @@ export default {
         {
           text: "유저 아이디",
           align: "left",
-          sortable: false,
           value: "id"
         },
         { text: "유저 이름", value: "name", sortable: false },
@@ -108,10 +111,19 @@ export default {
         blocked: false
       },
       isDelUser: false,
+      isLoading: true,
       delId: ""
     };
   },
+  mounted() {
+    this.isLoading = true;
+    this.getUsers();
+  },
   methods: {
+    checkSelf(id) {
+      if (id === this.$store.state.user.id) return false;
+      return true;
+    },
     getUsers() {
       this.$axios
         .get("manage/users")
@@ -123,7 +135,7 @@ export default {
             this.$store.commit("pop", { msg: e.message, color: "warning" });
         })
         .finally(() => {
-          this.$store.commit("loading");
+          this.isLoading = false;
         });
     },
     putDialog(user) {
@@ -160,7 +172,7 @@ export default {
     delUser(id) {
       this.$axios
         .delete(`manage/users/${id}`)
-        .then(r => {
+        .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 삭제 완료",
             color: "success"

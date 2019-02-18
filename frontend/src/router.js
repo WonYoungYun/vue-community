@@ -52,7 +52,10 @@ axios.interceptors.response.use(function (response) {
 //마이페이지에 접속하여 토큰과 정보를 받아와라
 
 const pageCheck = (to, from, next) => {
-  if (!localStorage.getItem('token')) return next(false)
+  if (!localStorage.getItem('token')) {
+    store.commit('pop', { msg: "잘못된 접근입니다.", color: 'warning' })
+    return next(false)
+  }
   axios.get(`${apiRootPath}user`)
     .then(r => {
       if (!r.data.success) throw new Error(r.data.msg)
@@ -88,21 +91,40 @@ export default new Router({
       component: () => import('./views/Register.vue')
     },
     {
+      path: '/board/:name',
+      name: '게시판',
+      component: () => import('./views/board/Index.vue'),
+      props: true
+    },
+    {
       path: '/myconfig',
       name: '내 설정',
-      component: () => import('./views/User.vue'),
+      component: () => import('./views/user/UserConfig.vue'),
       beforeEnter: pageCheck
     },
     {
+      path: '/myboard',
+      name: '내 게시판',
+      component: () => import('./views/user/UserBoard.vue'),
+      beforeEnter: pageCheck
+    },
+
+    {
       path: '/mycomments',
       name: '내가 쓴 댓글',
-      component: () => import('./views/UserComments.vue'),
+      component: () => import('./views/user/UserComments.vue'),
       beforEnter: pageCheck
     },
     {
       path: '/manage/users',
-      name: '유저현황',
+      name: '유저 현황',
       component: () => import('./views/manage/Users.vue'),
+      beforeEnter: pageCheck
+    },
+    {
+      path: '/manage/boards',
+      name: '게시판 현황',
+      component: () => import('./views/manage/Boards.vue'),
       beforeEnter: pageCheck
     },
     {

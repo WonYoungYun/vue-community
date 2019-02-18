@@ -62,16 +62,27 @@ router.all('*', function (req, res, next) {
         .catch(e => next(createError(401, e.message)))
 })
 
+//요기까지 온 시점에서 토큰을 풀었기 때문에 req.user에 유저가 누군지 서버가 판별할 수 있음
+
+
 router.all('*', function (req, res, next) {
     if (req.user.lv > 2) throw createError(403, '권한이 없습니다')
     next();
 });
 
-//유저 데이터를 가져가기위한 하나의 userAPI
+
+//유저가 자신의 데이터를 변경하기 위한
 router.use('/user', require('./user'))
+router.use('/board', require('./board'))
 
 
-//유저 관리를 위한 API
+
+//매니저 영역
+router.all('*', function (req, res, next) {
+    if (req.user.lv) throw createError(403, '권한이 없습니다')
+    next();
+});
+
 router.use('/manage', require('./manage'))
 
 

@@ -19,10 +19,17 @@
               ></v-text-field>
               <v-checkbox v-model="form.remember" label="암호 기억하기(최대 7일간 보관됩니다.)"></v-checkbox>
             </v-form>
+            <vue-recaptcha
+              ref="recaptcha"
+              :sitekey="$cfg.recaptchaSiteKey"
+              @verify="onVerify"
+              @expired="onExpired"
+            ></vue-recaptcha>
+            <v-alert :value="isRecaptchaAlert" type="error">Please Check Recaptcha</v-alert>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="success" @click="signIn">로그인</v-btn>
+            <v-btn color="success" @click="checkRobot">로그인</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -38,10 +45,21 @@ export default {
         id: "",
         pwd: "",
         remember: false
-      }
+      },
+      isRecaptchaAlert: false
     };
   },
   methods: {
+    onVerify(r) {
+      this.form.response = r;
+    },
+    onExpired() {
+      this.form.response = "";
+    },
+    checkRobot() {
+      if (this.form.response) this.signIn();
+      else this.isRecaptchaAlert = true;
+    },
     signIn() {
       this.$axios
         .post(`${this.$apiRootPath}sign/in`, this.form)
@@ -49,6 +67,7 @@ export default {
           if (!r.data.success) throw new Error(r.data.msg);
           localStorage.setItem("token", r.data.token);
           this.$store.commit("getToken", r.data.userData);
+          this.isRecaptchaAlert = false;
           this.$router.push("/");
         })
         .catch(e => {

@@ -4,9 +4,6 @@
 
     <v-content>
       <router-view/>
-      <div class="text-xs-center mt-3" v-if="$store.state.isLoading">
-        <v-progress-circular :size="70" :width="7" color="info" indeterminate></v-progress-circular>
-      </div>
     </v-content>
     <v-footer :fixed="fixed" app>
       <span>&copy; 2019 community</span>

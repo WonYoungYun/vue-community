@@ -21,16 +21,16 @@
       <v-divider></v-divider>
     </v-list>
     <v-list v-if="writerLvCheck">
-      <v-list-tile v-for="item in writers" :key="item.title" :to="item.to">
+      <!-- <v-list-tile :to="getBoardPath"> -->
+      <v-list-tile :to="writer.to">
         <v-list-tile-action>
-          <v-icon>{{ item.icon }}</v-icon>
+          <v-icon>{{ writer.icon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          <v-list-tile-title>{{ writer.title }}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
-
     <v-list-group v-if="manageLvCheck" :prepend-icon="manages.icon" no-action>
       <v-list-tile slot="activator">
         <v-list-tile-content>
@@ -47,21 +47,7 @@
 </template>
 <script>
 export default {
-  mounted() {
-    if (localStorage.getItem("token")) {
-      this.$axios
-        .get(`user`)
-        .then(r => {
-          if (!r.data.success) throw new Error(r.data.msg);
-          this.$store.commit("getToken", r.data.userData);
-          console.log("데이터 받아왔어요");
-        })
-        .catch(e => {
-          if (!e.response)
-            this.$store.commit("pop", { msg: e.message, color: "warning" });
-        });
-    }
-  },
+  props: ["userId"],
   computed: {
     userLvCheck() {
       return this.$store.state.user.lv < 3;
@@ -72,6 +58,10 @@ export default {
     manageLvCheck() {
       return this.$store.state.user.lv === 0;
     }
+    //나중에 쓸지 확인
+    // getBoardPath() {
+    //   return this.writer.to + this.userId;
+    // }
   },
   data() {
     return {
@@ -84,52 +74,53 @@ export default {
           }
         },
         {
-          icon: "notification_important",
+          icon: "notifications",
           title: "공지사항",
           to: {
-            path: "/about"
+            path: "/board/공지사항"
           }
         }
       ],
       users: [
         {
-          icon: "notification_important",
+          icon: "computer",
           title: "내가 남긴 댓글",
-          to: {
-            path: "/mycomments"
-          }
+          to: "/mycomments"
         },
         {
-          icon: "notification_important",
+          icon: "person",
           title: "마이페이지",
-          to: {
-            path: "/myconfig"
-          }
+          to: "/myconfig"
         }
       ],
-      writers: [
-        {
-          icon: "notification_important",
-          title: "내 게시판 바로가기",
-          to: {
-            path: `/board/${this.$store.state.user._id}`
-          }
-        }
-      ],
+      writer: {
+        icon: "folder",
+        title: "내 게시판",
+        to: "/myboard/"
+      },
+
       manages: {
         icon: "settings",
         title: "관리자 메뉴",
         subItems: [
           {
             icon: "face",
-            title: "users",
+            title: "유저 현황",
             to: {
               path: "/manage/users"
+            }
+          },
+          {
+            icon: "folder",
+            title: "게시판 현황",
+            to: {
+              path: "/manage/boards"
             }
           }
         ]
       }
     };
-  }
+  },
+  methods: {}
 };
 </script>

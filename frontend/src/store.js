@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token'),
     user: {
-      name: 'Visitor',
-      id: '없음',
+      name: '손님',
+      id: 'visitor',
       lv: 3,
       img: 'https://randomuser.me/api/portraits/lego/3.jpg'
     },
@@ -17,7 +17,6 @@ export default new Vuex.Store({
       msg: '',
       color: 'error'
     },
-    isLoading: false,
   },
 
 
@@ -25,17 +24,19 @@ export default new Vuex.Store({
     getToken(state, user) {
       state.token = localStorage.getItem('token')
       state.user = user
-
     },
     delToken(state) {
       localStorage.removeItem('token')
       state.token = null
       state.user = {
-        name: 'Visitor',
-        id: '없음',
+        name: '손님',
+        id: 'visitor',
         lv: 3,
         img: 'https://randomuser.me/api/portraits/lego/3.jpg'
       }
+    },
+    setProfile(state, profile) {
+      state.user.img = profile
     },
     pop(state, d) {
       state.sb.msg = d.msg
@@ -43,9 +44,6 @@ export default new Vuex.Store({
       state.sb.act = false
       if (d.act === undefined) state.sb.act = true
     },
-    loading(state) {
-      state.isLoading = !state.isLoading
-    }
   },
   actions: {
 

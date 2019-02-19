@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <my-board :board="board" v-if="board"></my-board>
+    <my-board :board="board" v-if="board" @getBoard="getBoard"></my-board>
     <template v-else>
       <v-container>
         <v-alert :value="true" type="warning">

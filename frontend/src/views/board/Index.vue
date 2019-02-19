@@ -8,14 +8,14 @@
               <v-btn icon class="hidden-xs-only" @click="$router.push('/')">
                 <v-icon>arrow_back</v-icon>
               </v-btn>
-              <v-toolbar-title>{{board.name}}</v-toolbar-title>
+              <v-toolbar-title class="font-weight-bold">{{board.name}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
 
             <v-spacer></v-spacer>
 
             <v-card-title class="black--text">
-              <div class="title px-5 py-2">{{board.content}}</div>
+              <div class="title px-1 py-2 font-italic">{{board.content}}</div>
             </v-card-title>
             <v-divider></v-divider>
           </v-layout>

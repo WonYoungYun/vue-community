@@ -7,9 +7,10 @@
             <v-list-tile-avatar>
               <img :src="$store.state.user.img">
             </v-list-tile-avatar>
-            <v-list-tile-content
-              class="title font-weight-bold"
-            >{{$store.state.user.name}}({{$store.state.user.id}})</v-list-tile-content>
+            <v-list-tile-content class="title font-weight-bold">
+              {{$store.state.user.name}}
+              <div>({{$store.state.user.id}})</div>
+            </v-list-tile-content>
           </v-list-tile>
         </v-list>
       </v-toolbar>

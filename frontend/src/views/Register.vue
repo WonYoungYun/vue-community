@@ -10,9 +10,9 @@
           <v-card-text>
             <v-form>
               <v-text-field
-                v-validate="'required|min:3|max:20'"
+                v-validate="'required|min:3|max:8'"
                 v-model="form.id"
-                :counter="20"
+                :counter="8"
                 :error-messages="errors.collect('id')"
                 label="아이디"
                 data-vv-name="id"
@@ -29,9 +29,9 @@
                 type="password"
               ></v-text-field>
               <v-text-field
-                v-validate="'required|min:1|max:40'"
+                v-validate="'required|min:1|max:8'"
                 v-model="form.name"
-                :counter="40"
+                :counter="8"
                 :error-messages="errors.collect('name')"
                 label="이름"
                 data-vv-name="name"

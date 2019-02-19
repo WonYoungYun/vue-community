@@ -12,7 +12,11 @@
             <v-toolbar :color="board.color" dark>
               <v-toolbar-title>{{board.name}}</v-toolbar-title>
               <v-spacer></v-spacer>
-              <span class="yellow--text">{{board._user.name}}({{board._user.id}})</span>
+
+              <span class="yellow--text">{{board._user.name}}({{board._user.id}})&nbsp;</span>
+              <v-avatar>
+                <img :src="board._user.img">
+              </v-avatar>
             </v-toolbar>
             <v-card-title primary-title>{{board.content}}</v-card-title>
             <v-divider></v-divider>

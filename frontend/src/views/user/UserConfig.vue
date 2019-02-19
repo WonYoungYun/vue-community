@@ -19,8 +19,8 @@
               <v-form>
                 <v-text-field
                   :disabled="!isEditing"
-                  v-validate="'required|min:1|max:40'"
-                  :counter="40"
+                  v-validate="'required|min:1|max:8'"
+                  :counter="8"
                   color="black"
                   label="이름"
                   :error-messages="errors.collect('name')"

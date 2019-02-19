@@ -18,7 +18,7 @@ router.get('/read/:name', (req, res, next) => {
 })
 
 router.get('/list', (req, res, next) => {
-    Board.find().sort({ regDate: -1 }).populate('_user', 'id name')
+    Board.find().sort({ regDate: -1 }).populate('_user', 'id name img')
         .then(rs => {
             res.send({ success: true, ds: rs, token: req.token })
         })
@@ -83,10 +83,24 @@ router.post('/', (req, res, next) => {
 })
 
 
-//U와 D에 적용
-// if (req.params !== req.user._id)
-//         if (req.user.lv) throw createError(403, '권한이 없습니다')
-//put delete 만들기
+
+
+
+router.delete('/:_id', (req, res, next) => {
+    const _id = req.params._id
+    Board.findById(_id).populate('_user', 'id')
+        .then(r => {
+            return User.findByIdAndUpdate(r._user._id, { $set: { myBoard: "" } })
+        })
+        .then(() => {
+            return Board.deleteOne({ _id })
+        })
+        .then(r => {
+            res.send({ success: true, msg: r, token: req.token })
+        }).catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+})
 
 router.all('*', function (req, res, next) {
     next(createError(404, '그런 api 없어'));

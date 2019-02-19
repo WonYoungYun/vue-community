@@ -23,7 +23,7 @@
           <td class="text-xs-center">{{ props.item.atcCnt }}</td>
           <td class="text-xs-center">{{ props.item.inCnt }}</td>
           <td class="text-xs-center">
-            <v-btn color="error" @click="checkDelUser(props.item._id)">삭제</v-btn>
+            <v-btn color="error" @click="checkDelBoard(props.item._id)">삭제</v-btn>
           </td>
         </template>
 
@@ -34,15 +34,15 @@
           icon="warning"
         >"{{ search }}" 의 검색결과가 없습니다.</v-alert>
       </v-data-table>
-      <v-dialog v-model="isDelUser" max-width="320">
+      <v-dialog v-model="isDelBoard" max-width="320">
         <v-card>
           <v-card-title class="title">정말 삭제 하시겠습니까?</v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn color="green darken-1" flat="flat" @click="isDelUser = false">아니요</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="isDelBoard = false">아니요</v-btn>
 
-            <v-btn color="red darken-1" flat="flat" @click="delUser(delBoardId)">네</v-btn>
+            <v-btn color="red darken-1" flat="flat" @click="delBoard(delBoardId)">네</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -77,7 +77,7 @@ export default {
         }
       ],
       dialog: false,
-      isDelUser: false,
+      isDelBoard: false,
       isLoading: true,
       delId: "",
 
@@ -86,10 +86,10 @@ export default {
   },
   mounted() {
     this.isLoading = true;
-    this.getUsers();
+    this.getBoards();
   },
   methods: {
-    getUsers() {
+    getBoards() {
       this.$axios
         .get("board/list")
         .then(r => {
@@ -105,19 +105,19 @@ export default {
         });
     },
 
-    checkDelUser(_id) {
+    checkDelBoard(_id) {
       this.delBoardId = _id;
-      this.isDelUser = true;
+      this.isDelBoard = true;
     },
-    delUser(id) {
+    delBoard(id) {
       this.$axios
-        .delete(`manage/users/${id}`)
+        .delete(`board/${id}`)
         .then(() => {
           this.$store.commit("pop", {
-            msg: "사용자 삭제 완료",
+            msg: "게시판 삭제 완료",
             color: "success"
           });
-          this.getUsers();
+          this.getBoards();
         })
         .catch(e => {
           if (!e.response)
@@ -125,7 +125,7 @@ export default {
         })
         .finally(() => {
           this.delBoardId = "";
-          this.isDelUser = false;
+          this.isDelBoard = false;
         });
     }
   }

@@ -48,7 +48,13 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="이름" hint="휴먼" persistent-hint required v-model="user.name"></v-text-field>
+                  <v-text-field
+                    label="이름"
+                    hint="사용자 이름 변경"
+                    persistent-hint
+                    required
+                    v-model="user.name"
+                  ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6>
                   <v-select :items="userLvs" label="권한" required v-model="user.lv"></v-select>

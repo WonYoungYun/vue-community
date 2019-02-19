@@ -77,6 +77,10 @@ export default {
     },
     signOut() {
       this.$store.commit("delToken");
+      this.$store.commit("pop", {
+        msg: "로그아웃 하셨습니다.",
+        color: "success"
+      });
       this.$router.push("/");
     }
   }

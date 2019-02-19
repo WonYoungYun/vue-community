@@ -118,7 +118,7 @@ export default {
           color: "warning"
         });
       this.$axios
-        .post("board", this.form)
+        .post(`${this.$apiRootPath}board/`, this.form)
         .then(() => {
           this.dialog = false;
           this.form = { name: "", content: "", color: "" };

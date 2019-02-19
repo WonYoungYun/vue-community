@@ -10,7 +10,7 @@ router.get('/read/:name', (req, res, next) => {
     const name = req.params.name
     Board.findOneAndUpdate({ name }, { $inc: { 'inCnt': 1 } })
         .then(r => {
-            res.send({ success: true, d: r, token: req.token })
+            res.send({ success: true, d: r, req_user: req.user._id, token: req.token })
         })
         .catch(e => {
             res.send({ success: false, msg: e.message })
@@ -54,7 +54,6 @@ router.get('/', (req, res, next) => {
 
 //게시판의 이름은 유니크하다.
 router.post('/', (req, res, next) => {
-    console.log("리퀘바디", req.body)
     const { name, content, color } = req.body
     const _id = req.user._id
     //이미 게시판이 있는지, 같은이름의 다른 게시판이 있는지 check

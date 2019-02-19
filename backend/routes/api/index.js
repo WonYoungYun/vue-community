@@ -70,7 +70,7 @@ router.all('*', function (req, res, next) {
 //유저가 자신의 데이터를 변경하기 위한
 router.use('/user', require('./user'))
 router.use('/board', require('./board'))
-
+router.use('/article', require('./article'))
 
 
 //매니저 영역

@@ -93,7 +93,11 @@ export default new Router({
       path: '/board/:name',
       name: '게시판',
       component: () => import('./views/board/Index.vue'),
-      props: true
+    },
+    {
+      path: '/article/:id',
+      name: '게시글',
+      component: () => import('./views/article/Index.vue'),
     },
     {
       path: '/myconfig',

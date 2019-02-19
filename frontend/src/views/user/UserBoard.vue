@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <template v-if="!board">
+    <my-board :board="board" v-if="board"></my-board>
+    <template v-else>
       <v-container>
         <v-alert :value="true" type="warning">
           <span class="black--text">당신의 게시판이 없습니다! 새로만드세요!</span>
@@ -64,7 +65,6 @@
         </v-dialog>
       </v-container>
     </template>
-    <my-board :board="board" v-else></my-board>
   </v-container>
 </template>
 <script>

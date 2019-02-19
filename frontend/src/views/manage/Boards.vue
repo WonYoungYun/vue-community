@@ -1,5 +1,6 @@
 <template>
   <v-container grid-list-md>
+    <v-alert :value="!boards" type="warning">데이터가 없습니다</v-alert>
     <v-card>
       <v-card-title class="headline font-weight-bold">게시판
         <v-spacer></v-spacer>
@@ -17,7 +18,7 @@
       <v-data-table :headers="headers" :items="boards" :search="search">
         <template slot="items" slot-scope="props">
           <td class="text-xs-center">{{ props.item.name }}</td>
-          <td class="text-xs-center">{{ props.item._user.id }}</td>
+          <td class="text-xs-center">{{props.item._user.name}}({{ props.item._user.id }})</td>
           <td class="text-xs-center">{{ props.item.regDate }}</td>
           <td class="text-xs-center">{{ props.item.atcCnt }}</td>
           <td class="text-xs-center">{{ props.item.inCnt }}</td>
@@ -75,8 +76,6 @@ export default {
           value: ""
         }
       ],
-      users: [],
-
       dialog: false,
       isDelUser: false,
       isLoading: true,
@@ -92,7 +91,7 @@ export default {
   methods: {
     getUsers() {
       this.$axios
-        .get("manage/board")
+        .get("board/list")
         .then(r => {
           this.boards = r.data.ds;
           console.log(this.boards);

@@ -92,6 +92,7 @@ export default {
         check: ""
       },
       user: {
+        _id: "",
         name: "",
         id: "",
         lv: "",
@@ -146,7 +147,7 @@ export default {
           pwd: this.pwd.pwd
         };
       this.$axios
-        .put(`user/${this.user.id}`, u)
+        .put(`user/${this.user._id}`, u)
         .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 수정 완료",
@@ -166,7 +167,7 @@ export default {
     },
     delUser() {
       this.$axios
-        .delete(`user/${this.user.id}`)
+        .delete(`user/${this.user._id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 삭제 완료",

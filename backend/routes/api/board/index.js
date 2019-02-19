@@ -30,6 +30,7 @@ router.get('/list', (req, res, next) => {
 
 router.all('*', function (req, res, next) {
     if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
+
     next();
 });
 
@@ -82,6 +83,9 @@ router.post('/', (req, res, next) => {
 })
 
 
+//U와 D에 적용
+// if (req.params !== req.user._id)
+//         if (req.user.lv) throw createError(403, '권한이 없습니다')
 //put delete 만들기
 
 router.all('*', function (req, res, next) {

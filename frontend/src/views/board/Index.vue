@@ -5,14 +5,11 @@
         <v-card>
           <v-layout column fill-height>
             <v-toolbar :color="board.color" dark>
-              <v-btn icon class="hidden-xs-only" @click="$router.push('/')">
+              <v-btn icon @click="$router.push('/')">
                 <v-icon>arrow_back</v-icon>
               </v-btn>
               <v-toolbar-title class="font-weight-bold">{{board.name}}</v-toolbar-title>
-              <v-spacer></v-spacer>
             </v-toolbar>
-
-            <v-spacer></v-spacer>
 
             <v-card-title class="black--text">
               <div class="title px-1 py-2 font-italic">{{board.content}}</div>

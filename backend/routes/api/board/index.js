@@ -28,11 +28,6 @@ router.get('/list', (req, res, next) => {
 })
 
 
-router.all('*', function (req, res, next) {
-    if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
-
-    next();
-});
 
 
 //자신의 게시판을 관리하기위한 게시판 호출
@@ -44,7 +39,6 @@ router.all('*', function (req, res, next) {
 
 router.get('/', (req, res, next) => {
     const _id = req.user._id
-    console.log("보드 정보 부르기", req.user.id)
     User.findById({ _id })
         .then(r => {
             return Board.findOne({ name: r.myBoard }).populate('_user', 'id')
@@ -82,10 +76,6 @@ router.post('/', (req, res, next) => {
         })
 })
 
-
-
-
-
 router.delete('/:_id', (req, res, next) => {
     const _id = req.params._id
     Board.findById(_id).populate('_user', 'id')
@@ -101,6 +91,28 @@ router.delete('/:_id', (req, res, next) => {
             res.send({ success: false, msg: e.message })
         })
 })
+
+
+router.put('/:_id', (req, res, next) => {
+
+    const _id = req.params._id
+
+    Board.findById(_id).populate('_user', 'id')
+        .then(r => {
+            return User.findByIdAndUpdate(r._user._id, { $set: { myBoard: req.body.name } })
+        })
+        .then(() => {
+            return Board.updateOne({ _id }, { $set: req.body })
+        })
+        .then(r => {
+            res.send({ success: true, msg: r, token: req.token })
+        }).catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+
+})
+
+
 
 router.all('*', function (req, res, next) {
     next(createError(404, '그런 api 없어'));

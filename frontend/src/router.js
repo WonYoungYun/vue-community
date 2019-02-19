@@ -47,7 +47,7 @@ axios.interceptors.response.use(function (response) {
 })
 
 
-//네비게이션 가드 철저히 흑흑
+//네비게이션 가드 철저히 
 //마이페이지에 접속하여 토큰과 정보를 받아와라
 
 const pageCheck = (to, from, next) => {

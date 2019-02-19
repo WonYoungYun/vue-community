@@ -3,19 +3,21 @@
     <v-card color="blue lighten-5">
       <v-container>
         <v-layout align-center justify-center>
-          <v-flex xs6 text-xs-center>
-            <v-avatar :tile="false" size="130" color="grey lighten-4">
-              <img :src="user.img" alt="avatar">
-            </v-avatar>
-            <v-divider></v-divider>
-            <v-btn @click="dialog=true">사진 바꾸기</v-btn>
-          </v-flex>
-          <v-flex xs6>
+          <v-flex xs12 md8>
             <v-card-title primary-title>
-              <div>
-                <div class="headline font-weight-bold">{{user.name}}({{user.id}})</div>
-                <div class="title">
-                  class:
+              <v-flex xs6>
+                <v-avatar :tile="false" size="120" color="grey lighten-4">
+                  <img :src="user.img" alt="avatar">
+                </v-avatar>
+                <div>
+                  <v-btn @click="dialog=true">사진 바꾸기</v-btn>
+                </div>
+              </v-flex>
+              <v-spacer></v-spacer>
+              <v-flex xs6>
+                <div class="title font-weight-bold">{{user.name}}</div>
+                <div class="title grey--text">{{user.id}}</div>
+                <div class="title font-weight-bold">
                   <span>{{lvDic[user.lv]}}</span>
                 </div>
                 <div>
@@ -26,7 +28,7 @@
                   출석:
                   <span>{{user.inCnt}}</span>
                 </div>
-              </div>
+              </v-flex>
             </v-card-title>
           </v-flex>
         </v-layout>

@@ -58,3 +58,11 @@ const config = {
 module.exports = config
 
 ```
+
+
+
+
+ 버튼을 눌렀을 때 라우터 변경시 Throws error "Uncaught TypeError: Cannot set property 'touched' of undefined" 오류가 뜨는 문제가 있었다
+ 이것을 해결하기 위해 뷰티파이 깃허브를 보았고 
+ https://github.com/vuetifyjs/vuetify/commit/0cd56717b0b4334c78e8e99dc7bad6b7dc479d0b
+ 여기서 이슈 해결에 대한 대답을 확인함

@@ -46,10 +46,10 @@
                     <v-flex class="text-xs-center">
                       <h4 class="grey--text">게시판 색상을 선택해주세요</h4>
                       <v-flex>
-                        <v-chip label color @click="form.color=''" dark></v-chip>
-                        <v-chip label color="blue lighten-1" @click="form.color='blue lighten-1'"></v-chip>
-                        <v-chip label color="green lighten-1" @click="form.color='green lighten-1'"></v-chip>
-                        <v-chip label color="cyan dark-1" @click="form.color='cyan dark-1'"></v-chip>
+                        <v-chip color="black" @click="form.color=''"></v-chip>
+                        <v-chip color="blue lighten-1" @click="form.color='blue lighten-1'"></v-chip>
+                        <v-chip color="green lighten-1" @click="form.color='green lighten-1'"></v-chip>
+                        <v-chip color="cyan dark-1" @click="form.color='cyan dark-1'"></v-chip>
                       </v-flex>
                     </v-flex>
                   </v-layout>

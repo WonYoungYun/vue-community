@@ -27,7 +27,12 @@
               <v-icon class="mr-1">create</v-icon>
               <span class="title">{{board.atcCnt}}</span>
               <v-spacer></v-spacer>
-              <v-btn color="black" flat class="mr-0" @click="$router.push(`board/${board.name}`)">
+              <v-btn
+                color="black"
+                flat
+                class="mr-0"
+                @click.prevent="$router.push(`board/${board.name}`)"
+              >
                 <v-icon>arrow_right_alt</v-icon>
               </v-btn>
             </v-card-actions>

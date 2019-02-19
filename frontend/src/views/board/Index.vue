@@ -4,12 +4,15 @@
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
           <v-layout column fill-height>
-            <v-card-title></v-card-title>
+            <v-toolbar :color="board.color" dark>
+              <v-toolbar-title>{{board.name}}</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
 
             <v-spacer></v-spacer>
 
-            <v-card-title class="black--text pl-5 pt">
-              <div class="display-2 pl-5 pt-0">{{board.name}}</div>
+            <v-card-title class="black--text">
+              <div class="title px-5 py-2">{{board.content}}</div>
             </v-card-title>
             <v-divider></v-divider>
           </v-layout>

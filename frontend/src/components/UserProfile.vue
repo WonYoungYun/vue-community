@@ -14,8 +14,8 @@
             <v-card-title primary-title>
               <div>
                 <div class="headline font-weight-bold">{{user.name}}({{user.id}})</div>
-                <div class="title font-weight-bold">
-                  계급:
+                <div class="title">
+                  class:
                   <span>{{lvDic[user.lv]}}</span>
                 </div>
                 <div>

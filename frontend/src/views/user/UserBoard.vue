@@ -10,9 +10,10 @@
         <v-flex xs12 sm4 text-xs-center></v-flex>
         <v-dialog v-model="dialog" persistent max-width="500px">
           <v-card>
-            <v-card-title>
-              <span class="headline">게시판 추가</span>
-            </v-card-title>
+            <v-toolbar :color="form.color" dark>
+              <v-toolbar-title>게시판 추가</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
@@ -37,6 +38,19 @@
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
+                <v-container>
+                  <v-layout>
+                    <v-flex class="text-xs-center">
+                      <h4 class="grey--text">게시판 색상을 선택해주세요</h4>
+                      <v-flex>
+                        <v-chip label color @click="form.color=''" dark></v-chip>
+                        <v-chip label color="blue lighten-1" @click="form.color='blue lighten-1'"></v-chip>
+                        <v-chip label color="green lighten-1" @click="form.color='green lighten-1'"></v-chip>
+                        <v-chip label color="cyan dark-1" @click="form.color='cyan dark-1'"></v-chip>
+                      </v-flex>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
               </v-container>
             </v-card-text>
             <v-card-actions>
@@ -48,32 +62,37 @@
         </v-dialog>
       </v-container>
     </template>
-    <v-card class="mx-auto" color="#777" max-width="500" v-else dark>
+
+    <v-card class="mx-auto" max-width="500" v-else>
+      <v-toolbar :color="board.color" dark>
+        <v-toolbar-title>{{board._user.id}}님의 게시판 정보</v-toolbar-title>
+        <v-spacer></v-spacer>
+      </v-toolbar>
       <v-card-title>
-        <span class="headline font-weight-bold">{{board._user.id}}님의 게시판 정보</span>
+        <span class="headline font-weight-bold">{{board.name}}</span>
+        <v-layout align-center justify-end>
+          <v-icon class="mr-1">person</v-icon>
+          <span class="title mr-2">{{board.inCnt}}</span>
+          <span class="mr-1">·</span>
+          <v-icon class="mr-1">create</v-icon>
+          <span class="title">{{board.atcCnt}}</span>
+        </v-layout>
       </v-card-title>
 
       <v-divider></v-divider>
       <v-card-text class="subheading font-weight-bold">
         <v-flex>
           <div>
-            <h3 class="headline mb-0">{{board.name}}</h3>
-            <v-layout align-center justify-end>
-              <v-icon class="mr-1">person</v-icon>
-              <span class="title mr-2">{{board.inCnt}}</span>
-              <span class="mr-1">·</span>
-              <v-icon class="mr-1">create</v-icon>
-              <span class="title">{{board.atcCnt}}</span>
-            </v-layout>
             <v-container>
               <div>{{board.content}}</div>
+              <v-btn color="primary" flat @click="$router.push(`/board/${board.name}`)">바로가기</v-btn>
             </v-container>
+            <v-divider></v-divider>
             <v-container>
               <div>생성일: {{board.regDate}}</div>
             </v-container>
           </div>
         </v-flex>
-        <v-btn color="primary" @click="$router.push(`/board/${board.name}`)">바로가기</v-btn>
       </v-card-text>
 
       <v-card-actions>
@@ -93,6 +112,7 @@ export default {
         content: "",
         name: "",
         inCnt: "", //방문자 수
+        color: "",
         _user: {
           id: ""
         }
@@ -100,7 +120,8 @@ export default {
       dialog: false,
       form: {
         name: "",
-        content: ""
+        content: "",
+        color: "" //기본색상
       }
     };
   },
@@ -117,6 +138,7 @@ export default {
         .get(`${this.$apiRootPath}board/`)
         .then(r => {
           this.board = r.data.d;
+          console.log(this.board);
         })
         .catch(e => {
           if (!e.response)
@@ -133,6 +155,7 @@ export default {
         .post("board", this.form)
         .then(() => {
           this.dialog = false;
+          this.form = { name: "", content: "", color: "" };
           this.getBoard();
         })
         .catch(e => {

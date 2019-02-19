@@ -8,6 +8,7 @@ const boardSchema = new mongoose.Schema({
     content: { type: String, default: '' },//게시판에 대한 소개
     atcCnt: { type: Number, default: 0 },//게시글 숫자
     regDate: { type: String, dafault: '' },
+    color: { type: String, default: '' },//게시판 색상
     _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },//주인인 유저
 
 })

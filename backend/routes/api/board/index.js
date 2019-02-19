@@ -42,14 +42,15 @@ router.get('/', (req, res, next) => {
 
 //게시판의 이름은 유니크하다.
 router.post('/', (req, res, next) => {
-    const { name, content } = req.body
+    console.log("리퀘바디", req.body)
+    const { name, content, color } = req.body
     const _id = req.user._id
     //이미 게시판이 있는지, 같은이름의 다른 게시판이 있는지 check
 
     User.findById({ _id })
         .then(r => {
             if (r.myBoard) throw new Error('이미 게시판이 있습니다.')
-            return Board.create({ name, content, regDate: moment().format("YYYY-MM-DD"), _user: _id })
+            return Board.create({ name, content, color, regDate: moment().format("YYYY-MM-DD"), _user: _id })
         })
         .then(() => {
             return User.updateOne({ _id }, { $set: { 'myBoard': name } })
@@ -58,7 +59,7 @@ router.post('/', (req, res, next) => {
             res.send({ success: true, msg: r, token: req.token })
         })
         .catch(e => {
-            next(createError(400, '게시판오류'))
+            next(createError(400, e.message))
             res.send({ success: false, msg: e.message })
         })
 })

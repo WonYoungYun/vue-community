@@ -5,6 +5,9 @@
         <v-card>
           <v-layout column fill-height>
             <v-toolbar :color="board.color" dark>
+              <v-btn icon class="hidden-xs-only" @click="$router.push('/')">
+                <v-icon>arrow_back</v-icon>
+              </v-btn>
               <v-toolbar-title>{{board.name}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
@@ -43,6 +46,12 @@
 
 <script>
 export default {
+  watch: {
+    $route() {
+      // console.log(to.path, from.path)
+      this.getBoard();
+    }
+  },
   data() {
     return {
       items: [

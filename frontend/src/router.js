@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import axios from 'axios'
-import Home from './views/Home.vue'
 import store from './store'
 
 
@@ -77,8 +76,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: '메인 화면',
+      component: () => import('./views/BoardList.vue')
     },
     {
       path: '/sign',

@@ -65,10 +65,6 @@ router.all('*', function (req, res, next) {
 //요기까지 온 시점에서 토큰을 풀었기 때문에 req.user에 유저가 누군지 서버가 판별할 수 있음
 
 
-router.all('*', function (req, res, next) {
-    if (req.user.lv > 2) throw createError(403, '권한이 없습니다')
-    next();
-});
 
 
 //유저가 자신의 데이터를 변경하기 위한

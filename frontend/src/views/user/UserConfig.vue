@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md6>
-        <user-profile :user="user"></user-profile>
+        <my-profile :user="user"></my-profile>
 
         <v-container>
           <v-card class="hide-overflow" color="grey lighten-3">
@@ -75,11 +75,11 @@
 
 <script>
 import ko from "vee-validate/dist/locale/ko";
-import UserProfile from "../../components/UserProfile.vue";
+import MyProfile from "../../components/MyProfile.vue";
 
 export default {
   components: {
-    UserProfile
+    MyProfile
   },
   $_veeValidate: {
     validator: "new"

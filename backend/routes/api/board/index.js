@@ -17,6 +17,23 @@ router.get('/read/:name', (req, res, next) => {
         })
 })
 
+router.get('/list', (req, res, next) => {
+    Board.find().sort({ regDate: -1 }).populate('_user', 'id name')
+        .then(rs => {
+            res.send({ success: true, ds: rs, token: req.token })
+        })
+        .catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+})
+
+
+router.all('*', function (req, res, next) {
+    if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
+    next();
+});
+
+
 //자신의 게시판을 관리하기위한 게시판 호출
 //게시판을 수정하고 삭제하는건 lv이 1인 유저만 가능하다.
 router.all('*', function (req, res, next) {

@@ -1,5 +1,6 @@
 <template>
   <v-container grid-list-md>
+    <v-alert :value="!users" type="warning">데이터가 없습니다</v-alert>
     <v-card>
       <v-card-title class="headline font-weight-bold">사용자
         <v-spacer></v-spacer>

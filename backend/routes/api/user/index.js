@@ -20,6 +20,13 @@ router.get('/', function (req, res, next) {
         })
 });
 
+
+
+router.all('*', function (req, res, next) {
+    if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
+    next();
+});
+
 //이미지 수정
 router.put('/', (req, res, next) => {
     const _id = req.user._id;

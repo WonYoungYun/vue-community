@@ -157,10 +157,8 @@ export default {
       this.list();
     },
     getAtc(id) {
-      console.log(id);
       this.isViewAtc = true;
       this.$axios.get(`${this.$apiRootPath}/article/read/${id}`).then(r => {
-        console.log("다시 데이터를 불렀습니다.");
         this.article = { ...r.data.d, req_user: r.data.req_user };
       });
     }

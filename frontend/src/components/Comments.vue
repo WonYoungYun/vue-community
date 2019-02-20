@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-container v-if="dialog">
+    <v-container v-if="artOpen">
       <v-card class="mx-auto" color="#f1f4f8">
         <v-card-title>
           <v-avatar :tile="false">
@@ -11,21 +11,33 @@
             <small class="grey--text">({{comment._user.id}})</small>
           </span>
           <v-spacer></v-spacer>
-          <v-btn icon @click="dialog = false" color="grey lighten-2">
+          <v-btn icon @click="$emit('cmtClose')" color="grey lighten-2">
             <v-icon>close</v-icon>
           </v-btn>
         </v-card-title>
 
-        <v-card-text class="headline font-weight-bold mx-5">{{comment.content}}</v-card-text>
+        <v-card-text class="title font-weight-bold px-5" v-if="!isModCmmt">{{comment.content}}</v-card-text>
+        <v-card-text class="title font-weight-bold px-5" v-else>
+          <v-text-field v-model="modContent" :disabled="!$store.state.user._id" required></v-text-field>
+        </v-card-text>
 
         <v-card-actions>
-          <v-list-tile class="grow">
-            <v-layout align-center justify-end>
-              <v-icon class="mr-1">mdi-heart</v-icon>
-              <span class="subheading mr-2">256</span>
-              <span class="mr-1">·</span>
-              <v-icon class="mr-1">mdi-share-variant</v-icon>
-              <span class="subheading">45</span>
+          <v-list-tile class="grow" v-if="checkWriter">
+            <v-layout align-center justify-end v-if="!isModCmmt">
+              <v-btn icon class="mr-1">
+                <v-icon color="primary" @click="$emit('modCmmtOpen')">create</v-icon>
+              </v-btn>
+              <v-btn icon class="mr-1">
+                <v-icon color="error" @click="delComment">delete</v-icon>
+              </v-btn>
+            </v-layout>
+            <v-layout align-center justify-end v-else>
+              <v-btn icon class="mr-1">
+                <v-icon color="error" @click="$emit('modCmmtClose')">close</v-icon>
+              </v-btn>
+              <v-btn icon class="mr-1">
+                <v-icon color="primary" @click="putComment">create</v-icon>
+              </v-btn>
             </v-layout>
           </v-list-tile>
         </v-card-actions>
@@ -93,16 +105,20 @@
 
 <script>
 export default {
-  props: ["article", "cmmts", "cnt"],
+  props: ["article", "cmmts", "cnt", "artOpen", "isModCmmt"],
   data() {
     return {
       selected: [2],
-      comment: "",
+      comment: {
+        _user: {
+          img: ""
+        }
+      },
       content: "",
       newCmmts: [],
       isLoading: false,
-      dialog: false,
       total: 8,
+      modContent: "",
       params: {
         page: 1
       }
@@ -113,13 +129,17 @@ export default {
       return this.$store.state.user._id
         ? "댓글"
         : "댓글을 다시려면 로그인 해주세요";
+    },
+    checkWriter() {
+      return this.$store.state.user._id === this.comment._user._id;
     }
   },
 
   methods: {
     showComment(cmmt) {
       this.comment = cmmt;
-      this.dialog = true;
+      this.modContent = this.comment.content;
+      this.$emit("cmtOpen");
     },
     getComments() {
       if (this.isLoading) return;
@@ -166,8 +186,37 @@ export default {
           if (!e.response)
             this.$store.commit("pop", { msg: e.message, color: "warning" });
         });
-
-      //댓글리스트 요청하기
+    },
+    putComment() {
+      if (this.modContent === this.comment.content) return;
+      this.modContent = this.modContent.trim();
+      if (!this.modContent) return;
+      this.$axios
+        .put(`${this.$apiRootPath}comment/${this.comment._id}`, {
+          content: this.modContent
+        })
+        .then(({ data }) => {
+          if (!data.success)
+            return this.$store.commit("pop", {
+              msg: data.message,
+              color: "warning"
+            });
+          this.$emit("modCmmtClose");
+          this.$emit("getComments");
+          this.$emit("cmtClose");
+          this.modContent = ""
+          this.$store.commit("pop", {
+            msg: "게시글을 수정완료.",
+            color: "primary"
+          });
+        })
+        .catch(e => {
+          if (!e.response)
+            this.$store.commit("pop", { msg: e.message, color: "warning" });
+        });
+    },
+    delComment() {
+      console.log("댓글 삭제");
     },
     checkTime(time) {
       return this.$moment(time).fromNow();

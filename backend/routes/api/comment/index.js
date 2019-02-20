@@ -56,7 +56,6 @@ router.all('*', function (req, res, next) {
 router.post('/:_article', (req, res, next) => {
     const _article = req.params._article
     if (!_article) throw createError(400, '게시글이 선택되지 않았습니다.')
-    console.log(req.body, _article)
     const { content } = req.body
 
     let boardId = "";
@@ -69,18 +68,15 @@ router.post('/:_article', (req, res, next) => {
             boardId = r._board
             console.log("유저를 찾아 + 1", boardId)
             //댓글 쓴 유저를 찾아 댓글 수 +1
-
             return User.findByIdAndUpdate(req.user._id, { $inc: { 'cnt.com': 1 } })
         })
         .then(() => {
-
             const cmt = {
                 content,
                 _article,
                 _user: req.user._id,
                 boardId
             }
-            console.log("댓글만들기 위해 내용 보기", cmt)
             return Comment.create(cmt)
         })
         .then(r => {
@@ -92,4 +88,23 @@ router.post('/:_article', (req, res, next) => {
         })
 })
 
+router.put('/:_cmt', (req, res, next) => {
+    const _id = req.params._cmt
+    if (!req.body.content) throw createError(400, '제목이 없습니다.')
+    Comment.findById(_id)
+        .then(r => {
+            if (!r) throw createError(400, '게시물이 존재하지 않습니다')
+            return Comment.findByIdAndUpdate(_id, { $set: { content: req.body.content } })
+        })
+        .then(() => {
+            return Comment.findById(_id)
+
+        })
+        .then(r => {
+            res.send({ success: true, d: r, token: req.token })
+        })
+        .catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+})
 module.exports = router;

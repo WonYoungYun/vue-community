@@ -3,7 +3,7 @@
     <template>
       <v-card class="mx-auto" color="#f1f4f8">
         <v-toolbar color="#f1f4f8" v-if="!isMod">
-          <v-btn icon @click="$emit('closeAtc')">
+          <v-btn icon @click="close">
             <v-icon>arrow_back</v-icon>
           </v-btn>
           <v-toolbar-title class="title font-weight-bold">{{article.title}}</v-toolbar-title>
@@ -12,7 +12,7 @@
         </v-toolbar>
 
         <v-card min-height="300px">
-          <v-card-text class="title" v-if="!isMod">
+          <v-card-text class="headline" v-if="!isMod">
             <viewer :value="article.content"/>
           </v-card-text>
           <v-card-text v-else>
@@ -73,7 +73,13 @@
             :article="article"
             :cmmts="article.comments"
             :cnt="article.cnt.comment"
+            :artOpen="artOpen"
+            :isModCmmt="isModCmmt"
             @getComments="getComments"
+            @modCmmtOpen="modCmmtOpen"
+            @modCmmtClose="modCmmtClose"
+            @cmtOpen="cmtOpen"
+            @cmtClose="cmtClose"
           ></view-comments>
         </div>
       </v-card>
@@ -101,7 +107,9 @@ export default {
         title: "",
         content: "",
         id: ""
-      }
+      },
+      artOpen: false,
+      isModCmmt: false
     };
   },
   methods: {
@@ -110,6 +118,19 @@ export default {
       this.form.title = this.article.title;
       this.form.content = this.article.content;
       this.form.id = this.article._user._id;
+    },
+    cmtOpen() {
+      this.artOpen = true;
+    },
+    cmtClose() {
+      this.isModCmmt = false;
+      this.artOpen = false;
+    },
+    modCmmtOpen() {
+      this.isModCmmt = true;
+    },
+    modCmmtClose() {
+      this.isModCmmt = false;
     },
     putArticle() {
       this.$axios
@@ -151,6 +172,11 @@ export default {
     },
     getComments() {
       this.$emit("getArticle", this.article._id);
+    },
+    close() {
+      this.artOpen = false;
+      this.isModCmmt = false;
+      this.$emit("closeAtc");
     }
   }
 };

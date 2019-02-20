@@ -15,7 +15,7 @@ router.use('/sign', require('./sign'))
 const verifyToken = (t) => {
     return new Promise((resolve, reject) => {
         if (!t) resolve({ id: 'guest', name: '손님', lv: 3 })
-        if ((typeof t) !== 'string') reject(new Error('문자가 아닌 토큰 입니다.'))
+        if ((typeof t) !== 'string') reject(createError(403, '문자가 아닌 토큰 입니다.'))
         if (t.length < 10) resolve({ id: 'guest', name: '손님', lv: 3 })
         jwt.verify(t, cfg.jwt.secretKey, (err, v) => {
             if (err) reject(err)

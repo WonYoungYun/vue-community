@@ -6,6 +6,7 @@ var router = require('express').Router()
 const User = require('../../../models/users')
 const Board = require('../../../models/boards')
 const Article = require('../../../models/articles')
+const Comment = require('../../../models/comments')
 const crypto = require('crypto')
 
 //토큰을 위조한 것이 아니라 올바른 절차를 밞은 유저인지 확인하는 api
@@ -76,16 +77,24 @@ router.delete('/:_id', (req, res, next) => {
     if (_id !== req.user._id)
         if (req.user.lv) throw createError(403, '권한이 없습니다')
 
-    Article.deleteMany({ _user: _id })
-        .then(() => {
-
-        })
     let userBoard = ""
     //id를 먼저 찾는다
     User.findById(_id)
         .then((r) => {
             //아이디에 연결된 게시판 이름을 추가
             userBoard = r.myBoard
+            //아이디과 연결된 댓글을 삭제
+            return Comment.deleteMany({ _user: _id })
+        })
+        .then(() => {
+            //게시판 아이디 조회
+            return Board.findOne({ name: userBoard })
+        })
+        .then(r => {
+            //게시판에 연결된 댓글들 모두 삭제
+            return Comment.deleteMany({ _board: r._id })
+        })
+        .then(() => {
             //아이디과 연결된 게시글을 삭제
             return Article.deleteMany({ _user: _id })
         })

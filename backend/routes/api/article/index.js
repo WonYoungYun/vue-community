@@ -104,7 +104,6 @@ router.post('/:_board', (req, res, next) => {
 router.put('/:_id', (req, res, next) => {
     const _id = req.params._id
     if (!req.body.title) throw createError(400, '제목이 없습니다.')
-    console.log(req.body)
     if (req.user._id !== req.body.id) throw createError(403, '자신이 쓴 게시글만 수정할 수 있습니다!')
     Article.findById(_id)
         .then(r => {
@@ -136,6 +135,9 @@ router.delete('/:_id', (req, res, next) => {
         })
         .then(r => {
             return Board.findByIdAndUpdate(boardId, { $inc: { 'atcCnt': -1 } })
+        })
+        .then(r => {
+            return Comment.deleteMany({ _article: _id })
         })
         .then(() => {
             return Article.deleteOne({ _id })

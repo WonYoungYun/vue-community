@@ -34,7 +34,7 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.send({ msg: err.message })
-    console.error(err.message)
+
 });
 
 
@@ -48,7 +48,7 @@ const cfg = require('./config')
 
 mongoose.connect(cfg.dbUrl, { useNewUrlParser: true }, (err) => {
     if (err) return console.error(err)
-    console.log('mongoose connected!')
+
 
 })
 

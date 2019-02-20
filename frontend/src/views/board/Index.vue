@@ -100,7 +100,6 @@ export default {
       total: 0,
       isViewAtc: false
     };
-    //api id를 호출
   },
   mounted() {
     this.getBoard();

@@ -120,6 +120,10 @@ export default {
         .then(() => {
           this.dialog = false;
           this.form = { name: "", content: "", color: "" };
+          this.$store.commit("pop", {
+            msg: "게시판이 작성되었습니다.",
+            color: "primary"
+          });
           this.getBoard();
         })
         .catch(e => {

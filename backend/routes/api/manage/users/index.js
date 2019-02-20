@@ -1,9 +1,7 @@
 
 
-var createError = require('http-errors')
 var router = require('express').Router()
 const User = require('../../../../models/users')
-const Board = require('../../../../models/boards')
 
 
 

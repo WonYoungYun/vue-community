@@ -43,7 +43,6 @@ User.findOne({ id: cfg.admin.id })
         if (r.pwd !== cfg.admin.pwd) Promise.resolve(null)
         if (r) console.log(`admin:${r.id} created!`)
         const pwd = crypto.scryptSync(r.pwd, r._id.toString(), 64, { N: 1024 }).toString('hex')
-        console.log(pwd)
         return User.updateOne({ _id: r._id }, { $set: { pwd } })
     })
     .then((r) => {

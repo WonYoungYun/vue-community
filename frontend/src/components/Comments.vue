@@ -204,7 +204,7 @@ export default {
           this.$emit("modCmmtClose");
           this.$emit("getComments");
           this.$emit("cmtClose");
-          this.modContent = ""
+          this.modContent = "";
           this.$store.commit("pop", {
             msg: "게시글을 수정완료.",
             color: "primary"
@@ -216,7 +216,22 @@ export default {
         });
     },
     delComment() {
-      console.log("댓글 삭제");
+      this.$axios
+        .delete(`${this.$apiRootPath}article/${this.comment._id}`)
+        .then(() => {
+          this.$store.commit("pop", {
+            msg: "댓글 삭제 완료",
+            color: "success"
+          });
+          this.$emit("modCmmtClose");
+
+          this.$emit("cmtClose");
+          this.$emit("getComments");
+        })
+        .catch(e => {
+          if (!e.response)
+            this.$store.commit("pop", { msg: e.message, color: "warning" });
+        });
     },
     checkTime(time) {
       return this.$moment(time).fromNow();

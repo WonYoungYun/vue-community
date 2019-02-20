@@ -21,7 +21,6 @@
       <v-divider></v-divider>
     </v-list>
     <v-list v-if="writerLvCheck">
-      <!-- <v-list-tile :to="getBoardPath"> -->
       <v-list-tile :to="writer.to">
         <v-list-tile-action>
           <v-icon>{{ writer.icon }}</v-icon>
@@ -58,10 +57,6 @@ export default {
     manageLvCheck() {
       return this.$store.state.user.lv === 0;
     }
-    //나중에 쓸지 확인
-    // getBoardPath() {
-    //   return this.writer.to + this.userId;
-    // }
   },
   data() {
     return {

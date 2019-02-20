@@ -93,6 +93,10 @@ router.delete('/:_id', (req, res, next) => {
             //유저 아이디의 보드 정보 초기화
             return User.findByIdAndUpdate(userId, { $set: { myBoard: "" } })
         })
+        .then(() => {
+            //boardid 연관된 댓글 전부 삭제
+            return Comment.deleteMany({ _board: _id })
+        })
         .then((r) => {
             //게시판의 게시글 전체 삭제
             return Article.deleteMany({ _board: _id })

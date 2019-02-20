@@ -54,7 +54,6 @@ export default {
         .get(`${this.$apiRootPath}board/list`)
         .then(r => {
           this.boards = r.data.ds;
-          console.log(this.boards);
         })
         .catch(e => {
           if (!e.response)

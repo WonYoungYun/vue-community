@@ -5,6 +5,7 @@ var createError = require('http-errors')
 var router = require('express').Router()
 const User = require('../../../models/users')
 const Board = require('../../../models/boards')
+const Article = require('../../../models/articles')
 const crypto = require('crypto')
 
 //토큰을 위조한 것이 아니라 올바른 절차를 밞은 유저인지 확인하는 api
@@ -74,14 +75,26 @@ router.delete('/:_id', (req, res, next) => {
     const _id = req.params._id
     if (_id !== req.user._id)
         if (req.user.lv) throw createError(403, '권한이 없습니다')
-    User.findById(_id)
-        .then(r => {
 
-            //유저보드를 먼저 삭제
-            return Board.deleteOne({ name: r.myBoard })
-        })
+    Article.deleteMany({ _user: _id })
         .then(() => {
 
+        })
+    let userBoard = ""
+    //id를 먼저 찾는다
+    User.findById(_id)
+        .then((r) => {
+            //아이디에 연결된 게시판 이름을 추가
+            userBoard = r.myBoard
+            //아이디과 연결된 게시글을 삭제
+            return Article.deleteMany({ _user: _id })
+        })
+        .then((r) => {
+            //아이디와 연관된 게시판을 삭제
+            return Board.deleteOne({ name: userBoard })
+        })
+        .then(() => {
+            //아이디를 삭제
             return User.deleteOne({ _id })
         }
         ).then(r => {

@@ -3,6 +3,7 @@ var router = require('express').Router();
 
 const Board = require('../../../models/boards')
 const Article = require('../../../models/articles')
+const User = require('../../../models/users')
 const moment = require('moment')
 // const Comment = require('../../../models/comments')
 
@@ -13,7 +14,7 @@ router.get('/list/:_board', (req, res, next) => {
     const _board = req.params._board
     const { page } = req.query
     if (!(page)) throw createError(400, '잘못된 요청입니다.')
-    order = 'regDate'//날짜 순 정렬
+    order = '_id'//날짜 순 정렬
     limit = 8//30개씩 주기
     skip = limit * (parseInt(page) - 1); //페이지 1번일때 30개 스킵
     const s = {}
@@ -48,30 +49,17 @@ router.get('/list/:_board', (req, res, next) => {
 
 router.get('/read/:_id', (req, res, next) => {
     const _id = req.params._id
-    Article.findByIdAndUpdate(_id, { $inc: { 'cnt.view': 1 } })
+    Article.findByIdAndUpdate(_id, { $inc: { 'cnt.view': 1 } }).populate('_user', 'id name img')
         .then(r => {
-            if (!r) throw new Error('잘못된 게시판 입니다.')
+            if (!r) throw createError(400, '잘못된 요청입니다.')
             if (r)
-                res.send({ success: true, d: r, req_user: req_user._id, token: req.token })
+                res.send({ success: true, d: r, req_user: req.user._id, token: req.token })
         })
         .catch(e => {
             res.send({ success: false, msg: e.message })
         })
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 router.all('*', function (req, res, next) {
     if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
@@ -84,9 +72,11 @@ router.post('/:_board', (req, res, next) => {
     const { title, content } = req.body
     Board.findByIdAndUpdate(_board, { $inc: { 'atcCnt': 1 } })
         .then(r => {
-            console.log("게시판 확인", r)
-            if (!r) throw new Error('잘못된 게시판 입니다.')
-            if (r._user.toString() !== req.user._id.toString()) throw createError(403, '자신의 게시판에만 작성할 수 있습니다.')
+            if (!r) throw createError(400, '잘못된 게시판 입니다.')
+            if (r._user.toString() !== req.user._id) throw createError(403, '자신의 게시판에만 작성할 수 있습니다.')
+            return User.findByIdAndUpdate(r._user._id, { $inc: { 'cnt.atc': 1 } })
+        })
+        .then(r => {
             const atc = {
                 title,
                 content,
@@ -95,6 +85,52 @@ router.post('/:_board', (req, res, next) => {
                 _user: req.user._id
             }
             return Article.create(atc)
+        })
+        .then(r => {
+            res.send({ success: true, d: r, token: req.token })
+        })
+        .catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+})
+
+router.put('/:_id', (req, res, next) => {
+    const _id = req.params._id
+    if (!req.body.title) throw createError(400, '제목이 없습니다.')
+    if (req.user._id !== req.body.id) throw createError(403, '자신이 쓴 게시글만 수정할 수 있습니다!')
+    Article.findById(_id)
+        .then(r => {
+            if (!r) throw createError(400, '게시물이 존재하지 않습니다')
+            return Article.findByIdAndUpdate(_id, { $set: req.body })
+        })
+        .then(() => {
+            return Article.findById(_id)
+
+        })
+        .then(r => {
+            res.send({ success: true, d: r, token: req.token })
+        })
+        .catch(e => {
+            res.send({ success: false, msg: e.message })
+        })
+})
+
+router.delete('/:_id', (req, res, next) => {
+
+    const _id = req.params._id
+    let boardId = "";
+    Article.findById(_id)
+        .then(r => {
+            if (!r) throw createError(400, '게시물이 존재하지 않습니다')
+            if (req.user._id !== r._user.toString()) throw createError(403, '자신이 쓴 게시글만 삭제할 수 있습니다!')
+            boardId = r._board
+            return User.findByIdAndUpdate(r._user, { $inc: { 'cnt.atc': -1 } })
+        })
+        .then(r => {
+            return Board.findByIdAndUpdate(boardId, { $inc: { 'atcCnt': -1 } })
+        })
+        .then(() => {
+            return Article.deleteOne({ _id })
         })
         .then(r => {
             res.send({ success: true, d: r, token: req.token })

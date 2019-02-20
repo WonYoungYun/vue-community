@@ -91,7 +91,7 @@ export default {
   methods: {
     getBoards() {
       this.$axios
-        .get("board/list")
+        .get(`${this.$apiRootPath}board/list`)
         .then(r => {
           this.boards = r.data.ds;
           console.log(this.boards);
@@ -111,7 +111,7 @@ export default {
     },
     delBoard(id) {
       this.$axios
-        .delete(`board/${id}`)
+        .delete(`${this.$apiRootPath}board/${id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "게시판 삭제 완료",

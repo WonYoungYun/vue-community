@@ -156,7 +156,7 @@ export default {
     putUser() {
       this.dialog = false;
       this.$axios
-        .put(`user/${this.user._id}`, {
+        .put(`${this.$apiRootPath}user/${this.user._id}`, {
           name: this.user.name,
           lv: this.user.lv,
           blocked: this.user.blocked
@@ -179,7 +179,7 @@ export default {
     },
     delUser(id) {
       this.$axios
-        .delete(`user/${id}`)
+        .delete(`${this.$apiRootPath}user/${id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 삭제 완료",

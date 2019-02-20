@@ -127,7 +127,7 @@ export default {
               msg: "모두 작성해주세요",
               color: "warning"
             });
-          return this.$axios.post("/sign/up", this.form);
+          return this.$axios.post(`${this.$apiRootPath}/sign/up`, this.form);
         })
         .then(r => {
           if (!r.data.success) throw this.pop("서버에러", "warning");

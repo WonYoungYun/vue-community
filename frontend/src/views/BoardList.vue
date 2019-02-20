@@ -21,18 +21,13 @@
             <v-card-title primary-title>{{board.content}}</v-card-title>
             <v-divider></v-divider>
             <v-card-actions>
-              <v-icon class="mr-1">person</v-icon>
+              <v-icon class="mr-1">visibility</v-icon>
               <span class="title mr-2">{{board.inCnt}}</span>
               <span class="mr-1">·</span>
               <v-icon class="mr-1">create</v-icon>
               <span class="title">{{board.atcCnt}}</span>
               <v-spacer></v-spacer>
-              <v-btn
-                color="black"
-                flat
-                class="mr-0"
-                @click.prevent="$router.push(`board/${board.name}`)"
-              >
+              <v-btn color="black" flat class="mr-0" :to="`board/${board.name}`">
                 <v-icon>arrow_right_alt</v-icon>
               </v-btn>
             </v-card-actions>

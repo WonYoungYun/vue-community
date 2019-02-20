@@ -16,9 +16,10 @@
               <v-spacer></v-spacer>
               <v-flex xs6>
                 <div class="title font-weight-bold">{{user.name}}</div>
-                <div class="title grey--text">{{user.id}}</div>
-                <div class="title font-weight-bold">
-                  <span>{{lvDic[user.lv]}}</span>
+                <div class="title grey--text mb-1">{{user.id}}</div>
+                <div>
+                  권한:
+                  <span class="title font-weight-bold">{{lvDic[user.lv]}}</span>
                 </div>
                 <div>
                   생성일:
@@ -26,7 +27,9 @@
                 </div>
                 <div>
                   출석:
-                  <span>{{user.inCnt}}</span>
+                  <span class="subheading font-weight-bold">{{user.cnt.in}}</span>
+                  게시글 수:
+                  <span class="subheading font-weight-bold">{{user.cnt.atc}}</span>
                 </div>
               </v-flex>
             </v-card-title>
@@ -100,7 +103,7 @@ export default {
     },
     submitProfile() {
       this.$axios
-        .put(`user/`, { img: this.user.img })
+        .put(`${this.$apiRootPath}user`, { img: this.user.img })
         .then(() => {
           this.$store.commit("setProfile", this.user.img);
           this.$store.commit("pop", {

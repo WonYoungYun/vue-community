@@ -3,27 +3,21 @@
     <v-btn color="cyan" dark fixed bottom right fab large @click="dialog = true">
       <v-icon>add</v-icon>
     </v-btn>
-    <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-dialog v-model="dialog" persistent max-width="1000px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{boardId}}</span>
+          <span class="headline">게시글 작성</span>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal first name*" required v-model="form.title"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Legal middle name"
-                  hint="example of helper text only on focus"
-                  required
-                  v-model="form.content"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-divider></v-divider>
+          <v-layout wrap>
+            <v-flex xs12>
+              <v-text-field label="제목을 입력하세요" required v-model="form.title"></v-text-field>
+            </v-flex>
+            <v-flex>
+              <editor v-model="form.content" mode="wysiwyg"/>
+            </v-flex>
+          </v-layout>
           <small>*제목과 내용을 반드시 입력하세요</small>
         </v-card-text>
         <v-card-actions>
@@ -58,9 +52,13 @@ export default {
           color: "primary"
         });
       this.$axios
-        .post(`${this.$apiRootPath}/article/${this.boardId}`, this.form)
+        .post(`${this.$apiRootPath}article/${this.boardId}`, this.form)
         .then(() => {
           this.dialog = false;
+          this.$store.commit("pop", {
+            msg: "게시글이 작성되었습니다.",
+            color: "primary"
+          });
           this.form = { title: "", content: "" };
           this.$emit("list");
         })

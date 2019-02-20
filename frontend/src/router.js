@@ -95,11 +95,6 @@ export default new Router({
       component: () => import('./views/board/Index.vue'),
     },
     {
-      path: '/article/:id',
-      name: '게시글',
-      component: () => import('./views/article/Index.vue'),
-    },
-    {
       path: '/myconfig',
       name: '내 설정',
       component: () => import('./views/user/UserConfig.vue'),

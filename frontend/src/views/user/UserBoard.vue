@@ -93,7 +93,6 @@ export default {
   },
   mounted() {
     this.getBoard();
-    //이 화면에서 CRUD가 다 이루어져야 한다.
   },
   methods: {
     addDialog() {
@@ -104,7 +103,6 @@ export default {
         .get(`${this.$apiRootPath}board/`)
         .then(r => {
           this.board = r.data.d;
-          console.log(this.board);
         })
         .catch(e => {
           if (!e.response)

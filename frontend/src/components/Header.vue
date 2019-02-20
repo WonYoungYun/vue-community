@@ -52,7 +52,7 @@ export default {
     //새로 고침 할때마다 데이터를 받아온다.
     if (localStorage.getItem("token")) {
       this.$axios
-        .get(`user`)
+        .get(`${this.$apiRootPath}user`)
         .then(r => {
           if (!r.data.success) throw new Error(r.data.msg);
           this.$store.commit("getToken", r.data.userData);

@@ -5,6 +5,11 @@ import router from './router'
 import store from './store'
 import VeeValidate from 'vee-validate'
 
+import 'tui-editor/dist/tui-editor.css'
+import 'tui-editor/dist/tui-editor-contents.css'
+import 'codemirror/lib/codemirror.css'
+import { Editor, Viewer } from '@toast-ui/vue-editor'
+
 //리캡챠를 사용하기위한 vue-recaptcha와 vue-plugin-load-script
 import VueRecaptcha from 'vue-recaptcha'
 import LoadScript from 'vue-plugin-load-script'
@@ -15,6 +20,9 @@ Vue.config.productionTip = false
 Vue.use(VeeValidate)
 
 Vue.use(LoadScript)
+
+Vue.component('editor', Editor)
+Vue.component('viewer', Viewer)
 
 Vue.prototype.$cfg = cfg.key
 

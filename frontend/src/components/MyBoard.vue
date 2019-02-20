@@ -54,7 +54,7 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-text-field
                   label="이름"
                   hint="게시판 이름 변경"
@@ -63,7 +63,7 @@
                   v-model="putBoard.name"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6>
+              <v-flex xs12>
                 <v-text-field
                   label="내용"
                   hint="게시판 내용 변경"
@@ -133,7 +133,7 @@ export default {
           color: "warning"
         });
       this.$axios
-        .put(`board/${this.board._id}`, {
+        .put(`${this.$apiRootPath}board/${this.board._id}`, {
           name: this.putBoard.name,
           content: this.putBoard.content,
           color: this.putBoard.color
@@ -153,12 +153,13 @@ export default {
     },
     delBoard(id) {
       this.$axios
-        .delete(`board/${id}`)
+        .delete(`${this.$apiRootPath}board/${id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "게시판 삭제 완료",
             color: "success"
           });
+          this.$emit("getBoard");
         })
         .catch(e => {
           if (!e.response)

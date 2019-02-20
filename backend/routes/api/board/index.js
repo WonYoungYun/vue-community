@@ -3,6 +3,7 @@ var createError = require('http-errors');
 var router = require('express').Router();
 const Board = require('../../../models/boards')
 const User = require('../../../models/users')
+const Article = require('../../../models/articles')
 const moment = require('moment')
 
 //보기위한 게시판 호출
@@ -44,7 +45,6 @@ router.get('/', (req, res, next) => {
             return Board.findOne({ name: r.myBoard }).populate('_user', 'id')
         })
         .then(r => {
-            console.log(r)
             res.send({ success: true, d: r, token: req.token })
         }).catch(e => {
             res.send({ success: false, msg: e.message })
@@ -60,7 +60,7 @@ router.post('/', (req, res, next) => {
 
     User.findById({ _id })
         .then(r => {
-            if (r.myBoard) throw new Error('이미 게시판이 있습니다.')
+            if (r.myBoard) throw createError(400, '이미 게시판이 있습니다.')
             return Board.create({ name, content, color, regDate: moment().format("YYYY-MM-DD"), _user: _id })
         })
         .then(() => {
@@ -77,11 +77,28 @@ router.post('/', (req, res, next) => {
 
 router.delete('/:_id', (req, res, next) => {
     const _id = req.params._id
+    let userId = ""
     Board.findById(_id).populate('_user', 'id')
         .then(r => {
-            return User.findByIdAndUpdate(r._user._id, { $set: { myBoard: "" } })
+            if (!r) throw createError(400, '잘못된 요청입니다.')
+            userId = r._user._id
+            //게시글 숫자를 센다
+            return Article.countDocuments({ _board: _id })
         })
-        .then(() => {
+        .then((r) => {
+            //유저 아이디에 게시글 쓴 수를 빼줌
+            return User.findByIdAndUpdate(userId, { $inc: { 'cnt.atc': -parseInt(r) } })
+        })
+        .then((r) => {
+            //유저 아이디의 보드 정보 초기화
+            return User.findByIdAndUpdate(userId, { $set: { myBoard: "" } })
+        })
+        .then((r) => {
+            //게시판의 게시글 전체 삭제
+            return Article.deleteMany({ _board: _id })
+        })
+        .then((r) => {
+            //게시판 삭제
             return Board.deleteOne({ _id })
         })
         .then(r => {
@@ -98,6 +115,7 @@ router.put('/:_id', (req, res, next) => {
 
     Board.findById(_id).populate('_user', 'id')
         .then(r => {
+            if (!r) throw createError(400, '잘못된 요청입니다.')
             return User.findByIdAndUpdate(r._user._id, { $set: { myBoard: req.body.name } })
         })
         .then(() => {

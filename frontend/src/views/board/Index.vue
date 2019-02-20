@@ -2,6 +2,7 @@
   <v-container>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
+        <view-article :dialog="isViewAtc" :article="article" @closeAtc="list"></view-article>
         <v-card>
           <v-layout column fill-height>
             <v-toolbar :color="board.color" dark>
@@ -25,14 +26,14 @@
 
               <v-list-tile-content>
                 <v-list-tile-title>
-                  <router-link :to="`/article/${item._id}`">{{ item.title }}</router-link>
+                  <a @click="getAtc(item._id)">{{ item.title }}</a>
                 </v-list-tile-title>
                 <v-list-tile-sub-title class="grey--text">{{ item.regDate }}</v-list-tile-sub-title>
               </v-list-tile-content>
 
               <v-list-tile-action>
                 <v-list-tile-action-text>{{item.cnt.view}}</v-list-tile-action-text>
-                <v-icon>person</v-icon>
+                <v-icon>visibility</v-icon>
               </v-list-tile-action>
 
               <v-list-tile-action>
@@ -56,10 +57,12 @@
 
 <script>
 import AddArticle from "../../components/AddArticle.vue";
+import ViewArticle from "../../components/Article.vue";
 
 export default {
   components: {
-    AddArticle
+    AddArticle,
+    ViewArticle
   },
   computed: {
     checkUser() {
@@ -77,6 +80,12 @@ export default {
   data() {
     return {
       articles: [],
+      article: {
+        title: "",
+        content: "",
+        _user: {},
+        cnt: {}
+      },
       reqUser: "",
       board: {
         name: "",
@@ -85,9 +94,11 @@ export default {
       params: {
         page: 1
       },
+      atcId: "",
       isLoadNextArticle: false,
       isAddArticle: false,
-      total: 0
+      total: 0,
+      isViewAtc: false
     };
     //api id를 호출
   },
@@ -97,14 +108,17 @@ export default {
   destroyed() {},
   methods: {
     list() {
+      this.isViewAtc = false;
       if (!this.board._id) return;
       this.isLoadNextArticle ? (this.params.page += 1) : (this.params.page = 1);
 
       this.loading = true;
-      console.log(this.params.page);
       this.$axios
-        .get(`article/list/${this.board._id}`, { params: this.params })
+        .get(`${this.$apiRootPath}article/list/${this.board._id}`, {
+          params: this.params
+        })
         .then(({ data }) => {
+          console.log(data);
           if (!data.success)
             return this.$store.commit("pop", {
               msg: data.msg,
@@ -116,9 +130,7 @@ export default {
           } else {
             this.articles = data.ds;
           }
-          console.log(this.articles);
           this.total = data.t;
-
           this.loading = false;
         })
         .catch(e => {
@@ -144,8 +156,20 @@ export default {
     getNextArticles() {
       this.isLoadNextArticle = true;
       this.list();
+    },
+    getAtc(id) {
+      this.isViewAtc = true;
+      this.$axios.get(`${this.$apiRootPath}/article/read/${id}`).then(r => {
+        this.article = { ...r.data.d, req_user: r.data.req_user };
+        console.log(this.article);
+      });
     }
   }
 };
 </script>
 
+<style>
+a {
+  text-decoration: none;
+}
+</style>

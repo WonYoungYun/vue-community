@@ -46,16 +46,16 @@ router.post('/in', (req, res, next) => {
     request.post(ro, (err, response, body) => {
         if (err) throw createError(401, '로봇 검증 실패입니다.')
         let u = {}
-        User.findOneAndUpdate({ id }, { $inc: { 'inCnt': 1 } }).lean()
+        User.findOneAndUpdate({ id }, { $inc: { 'cnt.in': 1 } }).lean()
             .then((r) => {
-                if (!r) throw new Error('존재하지 않는 아이디입니다.')
+                if (!r) throw createError(400, '존재하지 않는 아이디입니다.')
 
                 const p = crypto.scryptSync(pwd, r._id.toString(), 64, { N: 1024 }).toString('hex')
-                if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.');
+                if (r.pwd !== p) throw createError(400, '비밀번호가 틀립니다.');
                 delete r.pwd
                 u = r
                 //blocked 됬을때 return
-                if (r.blocked) return res.send({ success: false, msg: "차단당했습니다. 관리자에게 문의하세요" })
+                if (r.blocked) throw createError(401, "차단당했습니다. 관리자에게 문의하세요")
                 return signToken(r._id, r.id, r.lv, r.name, r.regDate, remember)
             })
             .then((r) => {

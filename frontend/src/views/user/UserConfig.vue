@@ -97,6 +97,7 @@ export default {
         id: "",
         lv: "",
         img: "",
+        cnt: [],
         regDate: ""
       },
       dictionary: {
@@ -120,7 +121,7 @@ export default {
   methods: {
     getUser() {
       this.$axios
-        .get(`user`)
+        .get(`${this.$apiRootPath}user`)
         .then(r => {
           this.user = r.data.userData;
           this.putName = this.user.name;
@@ -147,7 +148,7 @@ export default {
           pwd: this.pwd.pwd
         };
       this.$axios
-        .put(`user/${this.user._id}`, u)
+        .put(`${this.$apiRootPath}user/${this.user._id}`, u)
         .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 수정 완료",
@@ -167,7 +168,7 @@ export default {
     },
     delUser() {
       this.$axios
-        .delete(`user/${this.user._id}`)
+        .delete(`${this.$apiRootPath}user/${this.user._id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "사용자 삭제 완료",

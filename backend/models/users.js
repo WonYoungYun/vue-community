@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
     myBoard: { type: String, default: "" },//보드 생성시 아이디 삽입
     regDate: { type: String, dafault: '' },    //계정생성일
     blocked: { type: Boolean, default: false },    //정지 상태
-    inCnt: { type: Number, default: 0 }, //접속몇번했는지
+    cnt: {
+        in: { type: Number, default: 0 }, //접속몇번했는지
+        atc: { type: Number, default: 0 },//게시글 쓴 횟수
+        com: { type: Number, default: 0 }//댓글쓴 횟수
+    },
     //자신소유 보드,
 
 

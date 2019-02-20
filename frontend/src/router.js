@@ -106,13 +106,6 @@ export default new Router({
       component: () => import('./views/user/UserBoard.vue'),
       beforeEnter: pageCheck
     },
-
-    {
-      path: '/mycomments',
-      name: '내가 쓴 댓글',
-      component: () => import('./views/user/UserComments.vue'),
-      beforEnter: pageCheck
-    },
     {
       path: '/manage/users',
       name: '유저 현황',

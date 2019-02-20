@@ -71,6 +71,7 @@ router.all('*', function (req, res, next) {
 router.use('/user', require('./user'))
 router.use('/board', require('./board'))
 router.use('/article', require('./article'))
+router.use('/comment', require('./comment'))
 
 
 //매니저 영역

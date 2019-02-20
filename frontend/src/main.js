@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VeeValidate from 'vee-validate'
+import moment from 'moment'
+import VueMoment from 'vue-momentjs'
 
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
@@ -16,15 +18,18 @@ import LoadScript from 'vue-plugin-load-script'
 
 import * as cfg from './config'
 
+moment.locale('ko')
 Vue.config.productionTip = false
 Vue.use(VeeValidate)
+Vue.use(VueMoment, moment)
 
-Vue.use(LoadScript)
 
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
 
 Vue.prototype.$cfg = cfg.key
+
+Vue.use(LoadScript)
 
 Vue.loadScript("https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit").then(() => {
   Vue.component('vue-recaptcha', VueRecaptcha)

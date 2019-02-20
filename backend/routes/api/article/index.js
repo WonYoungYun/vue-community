@@ -5,7 +5,7 @@ const Board = require('../../../models/boards')
 const Article = require('../../../models/articles')
 const User = require('../../../models/users')
 const moment = require('moment')
-// const Comment = require('../../../models/comments')
+const Comment = require('../../../models/comments')
 
 
 
@@ -13,6 +13,7 @@ const moment = require('moment')
 router.get('/list/:_board', (req, res, next) => {
     const _board = req.params._board
     const { page } = req.query
+    console.log(req.query, req.params)
     if (!(page)) throw createError(400, '잘못된 요청입니다.')
     order = '_id'//날짜 순 정렬
     limit = 8//30개씩 주기
@@ -49,11 +50,17 @@ router.get('/list/:_board', (req, res, next) => {
 
 router.get('/read/:_id', (req, res, next) => {
     const _id = req.params._id
+    let atc = {}
     Article.findByIdAndUpdate(_id, { $inc: { 'cnt.view': 1 } }).populate('_user', 'id name img')
         .then(r => {
             if (!r) throw createError(400, '잘못된 요청입니다.')
-            if (r)
-                res.send({ success: true, d: r, req_user: req.user._id, token: req.token })
+            atc = r
+            return Comment.find({ _article: atc._id }).populate('_user', 'id name img').sort({ regDate: -1 }).limit(8)
+
+        })
+        .then(rs => {
+            if (rs) atc.comments = rs
+            res.send({ success: true, d: atc, req_user: req.user._id, token: req.token })
         })
         .catch(e => {
             res.send({ success: false, msg: e.message })

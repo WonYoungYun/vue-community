@@ -83,11 +83,6 @@ export default {
       ],
       users: [
         {
-          icon: "computer",
-          title: "내가 남긴 댓글",
-          to: "/mycomments"
-        },
-        {
           icon: "person",
           title: "마이페이지",
           to: "/myconfig"

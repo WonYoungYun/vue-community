@@ -9,5 +9,9 @@
     "pr": "cd fe && yarn && yarn build && cd ../be && yarn && NODE_ENV=production PORT=80 node ./bin/www"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.24.0",
+    "vue-momentjs": "^0.1.2"
+  }
 }

@@ -10,6 +10,7 @@ const articleSchema = new mongoose.Schema({
         comment: { type: Number, default: 0 }
     },
     regDate: { type: String, default: '' },
+    comments: [], //댓글 넣을 배열
     _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
     _board: { type: mongoose.Schema.Types.ObjectId, ref: 'Board', index: true }
 })

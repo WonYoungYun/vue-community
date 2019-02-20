@@ -69,35 +69,12 @@
         <!-- 댓글 -->
         <v-divider></v-divider>
         <div v-if="!isMod">
-          <v-card>
-            <v-list three-line>
-              <v-list-tile v-for="comment in [1,2,3,4,5,6,7]" :key="comment">
-                <v-list-tile-content>
-                  <v-list-tile-title>잉여맨</v-list-tile-title>
-                  <v-list-tile-sub-title>댓글내용은 눌렀을때 자세한 내용만 보여주기</v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-btn icon ripple>
-                    <v-icon color="warning lighten-1">create</v-icon>
-                  </v-btn>
-                </v-list-tile-action>
-                <v-list-tile-action>
-                  <v-btn icon ripple>
-                    <v-icon color="error">clear</v-icon>
-                  </v-btn>
-                </v-list-tile-action>
-              </v-list-tile>
-              <v-divider></v-divider>
-            </v-list>
-            <v-card-actions>
-              <v-flex class="text-xs-center">
-                <v-btn flat>댓글 더보기</v-btn>
-              </v-flex>
-            </v-card-actions>
-          </v-card>
-          <v-card-text>
-            <v-text-field label="댓글 작성" append-icon="message"></v-text-field>
-          </v-card-text>
+          <view-comments
+            :article="article"
+            :cmmts="article.comments"
+            :cnt="article.cnt.comment"
+            @getComments="getComments"
+          ></view-comments>
         </div>
       </v-card>
     </template>
@@ -106,8 +83,11 @@
 
 
 <script>
+import ViewComments from "./Comments.vue";
+
 export default {
   props: ["dialog", "article"],
+  components: { ViewComments },
   computed: {
     checkUser() {
       return this.article.req_user === this.article._user._id;
@@ -124,7 +104,6 @@ export default {
       }
     };
   },
-  mounted() {},
   methods: {
     setArticle() {
       this.isMod = true;
@@ -169,6 +148,9 @@ export default {
           if (!e.response)
             this.$store.commit("pop", { msg: e.message, color: "warning" });
         });
+    },
+    getComments() {
+      this.$emit("getArticle", this.article._id);
     }
   }
 };

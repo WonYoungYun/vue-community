@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
-        <view-article :dialog="isViewAtc" :article="article" @closeAtc="list"></view-article>
+        <view-article :dialog="isViewAtc" :article="article" @closeAtc="list" @getArticle="getAtc"></view-article>
         <v-card>
           <v-layout column fill-height>
             <v-toolbar :color="board.color" dark>
@@ -94,7 +94,7 @@ export default {
       params: {
         page: 1
       },
-      atcId: "",
+      cmtPage: 1,
       isLoadNextArticle: false,
       isAddArticle: false,
       total: 0,
@@ -118,7 +118,6 @@ export default {
           params: this.params
         })
         .then(({ data }) => {
-          console.log(data);
           if (!data.success)
             return this.$store.commit("pop", {
               msg: data.msg,
@@ -158,10 +157,11 @@ export default {
       this.list();
     },
     getAtc(id) {
+      console.log(id);
       this.isViewAtc = true;
       this.$axios.get(`${this.$apiRootPath}/article/read/${id}`).then(r => {
+        console.log("다시 데이터를 불렀습니다.");
         this.article = { ...r.data.d, req_user: r.data.req_user };
-        console.log(this.article);
       });
     }
   }

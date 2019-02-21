@@ -28,10 +28,10 @@
             <small>*제목과 내용을 반드시 입력하세요</small>
           </v-card-text>
         </v-card>
-        <v-card-actions v-if="checkUser">
+        <v-card-actions v-if="$store.state.user.lv ? checkUser : true">
           <v-spacer></v-spacer>
 
-          <div>
+          <div v-if="checkUser ">
             <v-btn flat color="warning" @click="setArticle" v-if="!isMod" :disabled="isDel">수정</v-btn>
             <v-btn flat color="error" @click="isMod = false" v-else>취소</v-btn>
           </div>

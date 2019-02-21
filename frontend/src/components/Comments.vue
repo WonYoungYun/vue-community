@@ -22,9 +22,9 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-list-tile class="grow" v-if="checkWriter">
+          <v-list-tile class="grow" v-if="$store.state.user.lv ? checkWriter : true ">
             <v-layout align-center justify-end v-if="!isModCmmt">
-              <v-btn icon class="mr-1">
+              <v-btn icon class="mr-1" v-if="checkWriter">
                 <v-icon color="primary" @click="$emit('modCmmtOpen')">create</v-icon>
               </v-btn>
               <v-btn icon class="mr-1">
@@ -217,14 +217,13 @@ export default {
     },
     delComment() {
       this.$axios
-        .delete(`${this.$apiRootPath}article/${this.comment._id}`)
+        .delete(`${this.$apiRootPath}comment/${this.comment._id}`)
         .then(() => {
           this.$store.commit("pop", {
             msg: "댓글 삭제 완료",
             color: "success"
           });
           this.$emit("modCmmtClose");
-
           this.$emit("cmtClose");
           this.$emit("getComments");
         })

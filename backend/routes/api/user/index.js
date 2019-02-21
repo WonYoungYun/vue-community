@@ -26,7 +26,7 @@ router.get('/', function (req, res, next) {
 
 
 router.all('*', function (req, res, next) {
-    if (req.user.lv > 1) throw createError(403, '권한이 없습니다')
+    if (req.user.lv > 2) throw createError(403, '권한이 없습니다')
     next();
 });
 
@@ -34,7 +34,7 @@ router.all('*', function (req, res, next) {
 
 
 //이미지 수정
-router.put('/', (req, res, next) => {
+router.put('/img', (req, res, next) => {
     const _id = req.user._id;
     User.updateOne({ _id }, { $set: req.body })
         .then(r => {
@@ -43,6 +43,7 @@ router.put('/', (req, res, next) => {
         .catch(e => {
             res.send({ success: false, msg: e.message })
         })
+
 })
 
 //유저 이미지변경 api 추가
@@ -77,39 +78,21 @@ router.delete('/:_id', (req, res, next) => {
     if (_id !== req.user._id)
         if (req.user.lv) throw createError(403, '권한이 없습니다')
 
-    let userBoard = ""
+    let isDelUser = false
     //id를 먼저 찾는다
-    User.findById(_id)
+    User.findByIdAndRemove(_id)
         .then((r) => {
             //아이디에 연결된 게시판 이름을 추가
             userBoard = r.myBoard
             //아이디과 연결된 댓글을 삭제
-            return Comment.deleteMany({ _user: _id })
-        })
-        .then(() => {
-            //게시판 아이디 조회
-            return Board.findOne({ name: userBoard })
+            isDelUser = true
+            return Board.deleteOne({ name: r.myBoard })
         })
         .then(r => {
-            //게시판에 연결된 댓글들 모두 삭제
-            return Comment.deleteMany({ _board: r._id })
-        })
-        .then(() => {
-            //아이디과 연결된 게시글을 삭제
-            return Article.deleteMany({ _user: _id })
-        })
-        .then((r) => {
-            //아이디와 연관된 게시판을 삭제
-            return Board.deleteOne({ name: userBoard })
-        })
-        .then(() => {
-            //아이디를 삭제
-            return User.deleteOne({ _id })
-        }
-        ).then(r => {
             res.send({ success: true, msg: r, token: req.token })
         }).catch(e => {
-            res.send({ success: false, msg: e.message })
+            isDelUser ? res.send({ success: true, msg: r }) : res.send({ success: false, msg: e.message }
+            )
         })
 })
 

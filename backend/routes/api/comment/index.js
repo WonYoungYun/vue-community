@@ -66,7 +66,6 @@ router.post('/:_article', (req, res, next) => {
             if (!r) throw createError(400, '잘못된 게시글입니다')
             //게시글과 연결된 게시판의 아이디를 가져온다.
             boardId = r._board
-
             //댓글 쓴 유저를 찾아 댓글 수 +1
             return User.findByIdAndUpdate(req.user._id, { $inc: { 'cnt.com': 1 } })
         })
@@ -75,7 +74,7 @@ router.post('/:_article', (req, res, next) => {
                 content,
                 _article,
                 _user: req.user._id,
-                boardId
+                _board: boardId
             }
             return Comment.create(cmt)
         })
@@ -115,8 +114,10 @@ router.delete('/:_id', (req, res, next) => {
     Comment.findById(_id)
         .then(r => {
             if (!r) throw createError(400, '댓글이 존재하지 않습니다')
-            if (req.user._id !== r._user.toString()) throw createError(403, '자신이 쓴 댓글만 삭제할 수 있습니다!')
+            if (req.user.lv !== 0)
+                if (req.user._id !== r._user.toString()) throw createError(403, '자신이 쓴 댓글만 삭제할 수 있습니다!')
             atcId = r._article
+
             return User.findByIdAndUpdate(r._user, { $inc: { 'cnt.com': -1 } })
         })
         .then(r => {

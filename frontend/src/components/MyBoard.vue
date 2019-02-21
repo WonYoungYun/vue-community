@@ -152,6 +152,7 @@ export default {
         });
     },
     delBoard(id) {
+      console.log(id);
       this.$axios
         .delete(`${this.$apiRootPath}board/${id}`)
         .then(() => {

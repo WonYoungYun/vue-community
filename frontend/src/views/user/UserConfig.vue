@@ -138,7 +138,8 @@ export default {
         return;
       }
 
-      if (this.putName === this.user.name && this.pwd.check === "") return;
+      if (this.putName === this.user.name && this.pwd.check === "")
+        return (this.isEditing = false);
 
       let u = {};
       if (this.pwd.check === "") u = { name: this.putName };

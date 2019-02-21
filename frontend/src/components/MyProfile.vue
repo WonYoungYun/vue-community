@@ -103,9 +103,10 @@ export default {
     },
     submitProfile() {
       this.$axios
-        .put(`${this.$apiRootPath}user`, { img: this.user.img })
+        .put(`${this.$apiRootPath}user/img`, { img: this.user.img })
         .then(() => {
           this.$store.commit("setProfile", this.user.img);
+
           this.$store.commit("pop", {
             msg: "이미지 수정 완료",
             color: "success"

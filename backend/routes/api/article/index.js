@@ -13,7 +13,6 @@ const Comment = require('../../../models/comments')
 router.get('/list/:_board', (req, res, next) => {
     const _board = req.params._board
     const { page } = req.query
-    console.log(req.query, req.params)
     if (!(page)) throw createError(400, '잘못된 요청입니다.')
     order = '_id'//날짜 순 정렬
     limit = 8//30개씩 주기
@@ -129,7 +128,8 @@ router.delete('/:_id', (req, res, next) => {
     Article.findById(_id)
         .then(r => {
             if (!r) throw createError(400, '게시물이 존재하지 않습니다')
-            if (req.user._id !== r._user.toString()) throw createError(403, '자신이 쓴 게시글만 삭제할 수 있습니다!')
+            if (req.user.lv !== 0)
+                if (req.user._id !== r._user.toString()) throw createError(403, '자신이 쓴 게시글만 삭제할 수 있습니다!')
             boardId = r._board
             return User.findByIdAndUpdate(r._user, { $inc: { 'cnt.atc': -1 } })
         })

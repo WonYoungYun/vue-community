@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "set NODE_ENV=development & nodemon ./backend/bin/www",
     "serve": "cd frontend && yarn serve",
-    "pr": "cd frontend && yarn && yarn build && cd ../backend && yarn && NODE_ENV=production PORT=80 node ./bin/www"
+    "pr": "cd frontend && yarn && yarn build && cd ../backend && yarn && NODE_ENV=production PORT=80 node ./bin/www",
+    "pm2": "cd frontend && yarn && yarn build && cd ../backend && yarn && cd .. && pm2 start --env pr"
   },
   "author": "",
   "license": "ISC"

@@ -122,6 +122,8 @@ export default {
       delId: ""
     };
   },
+
+  created() {},
   mounted() {
     this.isLoading = true;
     this.getUsers();

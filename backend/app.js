@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
+const createError = require('http-errors')
 
 var app = express();
 
@@ -33,7 +34,8 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.send({ msg: err.message })
+
+    res.redirect('/')
 
 });
 

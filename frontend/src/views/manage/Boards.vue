@@ -84,6 +84,7 @@ export default {
       boards: []
     };
   },
+
   mounted() {
     this.isLoading = true;
     this.getBoards();
@@ -94,7 +95,6 @@ export default {
         .get(`${this.$apiRootPath}board/list`)
         .then(r => {
           this.boards = r.data.ds;
-          console.log(this.boards);
         })
         .catch(e => {
           if (!e.response)

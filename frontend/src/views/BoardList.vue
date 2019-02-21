@@ -52,6 +52,7 @@ export default {
       boards: []
     };
   },
+
   mounted() {
     this.getBoards();
   },

@@ -3,7 +3,7 @@
     <header-component></header-component>
 
     <v-content>
-      <router-view/>
+      <router-view :key="$route.fullPath"/>
     </v-content>
     <v-footer :fixed="fixed" app>
       <span>&copy;윤원영. - 2019 M.E.V community</span>

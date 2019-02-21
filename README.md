@@ -53,6 +53,8 @@ yarn
 cd..
 yarn dev //express 실행
 yarn serve //vue 실행
+
+localhost:8080에서 확인이 가능합니다.
 ```
 
 기능

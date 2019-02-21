@@ -10,7 +10,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../', 'frontend', 'public')));
+app.use(express.static(path.join(__dirname, '../', 'frontend', 'dist')));
 
 //개발시에만 cors 사용
 if (process.env.NODE_ENV !== 'production') app.use(cors())

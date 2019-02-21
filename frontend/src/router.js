@@ -6,9 +6,9 @@ import store from './store'
 
 Vue.use(Router)
 Vue.prototype.$axios = axios;
-const apiRootPath = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/api/' : '/api'
+const apiRootPath = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/api/' : '/api/'
 Vue.prototype.$apiRootPath = apiRootPath
-axios.defaults.baseURL = apiRootPath
+// axios.defaults.baseURL = apiRootPath
 
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
@@ -57,7 +57,7 @@ const pageCheck = (to, from, next) => {
   }
   axios.get(`${apiRootPath}user`)
     .then(r => {
-      if (!r.data.success) throw new Error(r.data.msg)
+      if (!r.data.success) store.commit('pop', { msg: r.data.msg, color: 'warning' })
       next();
     })
     .catch(e => {
@@ -118,7 +118,6 @@ export default new Router({
       component: () => import('./views/manage/Boards.vue'),
       beforeEnter: pageCheck
     },
-
     {
       path: '*',
       name: 'e404',

@@ -6,12 +6,8 @@
   "scripts": {
     "dev": "set NODE_ENV=development & nodemon ./backend/bin/www",
     "serve": "cd frontend && yarn serve",
-    "pr": "cd fe && yarn && yarn build && cd ../be && yarn && NODE_ENV=production PORT=80 node ./bin/www"
+    "pr": "cd frontend && yarn && yarn build && cd ../backend && yarn && NODE_ENV=production PORT=80 node ./bin/www"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "moment": "^2.24.0",
-    "vue-momentjs": "^0.1.2"
-  }
+  "license": "ISC"
 }

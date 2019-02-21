@@ -133,7 +133,7 @@ export default {
     },
     getUsers() {
       this.$axios
-        .get("manage/users")
+        .get(`${this.$apiRootPath}manage/users`)
         .then(r => {
           this.users = r.data.users;
         })

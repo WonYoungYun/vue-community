@@ -6,7 +6,7 @@
       <router-view/>
     </v-content>
     <v-footer :fixed="fixed" app>
-      <span>&copy; 2019 community</span>
+      <span>&copy;윤원영. - 2019 M.E.V community</span>
     </v-footer>
 
     <v-snackbar v-model="$store.state.sb.act" :color="$store.state.sb.color">

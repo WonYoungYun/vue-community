@@ -64,9 +64,17 @@ export default {
       this.$axios
         .post(`${this.$apiRootPath}sign/in`, this.form)
         .then(r => {
-          if (!r.data.success) throw new Error(r.data.msg);
+          if (!r.data.success)
+            return this.$store.commit("pop", {
+              msg: r.data.msg,
+              color: "warning"
+            });
           localStorage.setItem("token", r.data.token);
           this.$store.commit("getToken", r.data.userData);
+          this.$store.commit("pop", {
+            msg: `${this.$store.state.user.id}님 환영합니다!`,
+            color: "primary"
+          });
           this.isRecaptchaAlert = false;
           this.$router.push("/");
         })

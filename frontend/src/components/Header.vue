@@ -40,7 +40,6 @@
         <v-btn color="error" @click="signOut">로그아웃</v-btn>
       </template>
     </v-toolbar>
-    <scroll-up></scroll-up>
   </nav>
 </template>
 
